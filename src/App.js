@@ -1,10 +1,13 @@
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import { useState } from "react";
+import AddTask from "./components/AddTask";
+
 
 function App() {
   // tasks below, the array, is immutable . you cannot push to it. you re-create it and send it off again
   // usually would have a store (?) or api that youre fetching data from
+  const[showAddTask, setShowAddTask] = useState(false)
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -35,14 +38,21 @@ function App() {
       task.id === id ? {...task, reminder: !task.reminder} : task
     )))
   }
+
+  const addTask = (task) => {
+  const id = Math.floor(Math.random() * 1000) + 1;
+  const newTask = {id, ...task}
+  setTasks([...tasks,newTask])
+  }
   return (
     <div className="container">
-      <Header />
+      <Header onAdd={()=> setShowAddTask(!showAddTask)} showAddTask={showAddTask}/>
       {tasks.length > 0 ? (
         <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/>
       ) : (
         "You have no tasks"
       )}
+     { showAddTask && <AddTask onAdd={addTask}/>}
     </div>
   );
 }
