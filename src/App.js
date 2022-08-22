@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function App() {
   // tasks below, the array, is immutable . you cannot push to it. you re-create it and send it off again
-// usually would have a store (?) or api that youre fetching data from
+  // usually would have a store (?) or api that youre fetching data from
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -25,10 +25,24 @@ function App() {
       reminder: false,
     },
   ]);
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const toggleReminder = (id) =>{
+    setTasks(tasks.map((task)=> (
+      task.id === id ? {...task, reminder: !task.reminder} : task
+    )))
+  }
   return (
     <div className="container">
       <Header />
-      <Tasks tasks={tasks}/>
+      {tasks.length > 0 ? (
+        <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/>
+      ) : (
+        "You have no tasks"
+      )}
     </div>
   );
 }
